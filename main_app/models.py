@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 # Create your models here.
 
 class Rescue(models.Model):
@@ -9,4 +10,7 @@ class Rescue(models.Model):
 
     def __str__(self):
         return f'{self.name} is a {self.animal} with an id of {self.id}'
+    
+    def get_absolute_url(self):
+        return reverse('detail', kwargs={'rescue_id': self.id})
 
