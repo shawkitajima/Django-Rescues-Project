@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Rescue
+from .forms import GiftForm
 # Create your views here.
 
 
@@ -17,7 +18,8 @@ def rescues_index(request):
 
 def rescues_detail(request, rescue_id):
     rescue = Rescue.objects.get(id=rescue_id)
-    return render(request, 'rescues/detail.html', {'rescue': rescue})
+    gift_form = GiftForm()
+    return render(request, 'rescues/detail.html', {'rescue': rescue, 'gift_form': gift_form})
 
 class RescueCreate(CreateView):
     model = Rescue
@@ -30,3 +32,12 @@ class RescueUpdate(UpdateView):
 class RescueDelete(DeleteView):
     model = Rescue
     success_url = '/rescues/'
+
+
+def add_gift(request, rescue_id):
+  form = GiftForm(request.POST)
+  if form.is_valid():
+    new_gift = form.save(commit=False)
+    new_gift.rescue_id = rescue_id
+    new_gift.save()
+  return redirect('detail', rescue_id=rescue_id)

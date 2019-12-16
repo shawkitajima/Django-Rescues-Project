@@ -14,3 +14,14 @@ class Rescue(models.Model):
     def get_absolute_url(self):
         return reverse('detail', kwargs={'rescue_id': self.id})
 
+
+class Gift(models.Model):
+    name = models.CharField(max_length=100)
+    date = models.DateField()
+    rescue = models.ForeignKey(Rescue, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.name} was provided on {self.date} to {self.rescue.name}'
+
+    class Meta:
+        ordering=['-date']
