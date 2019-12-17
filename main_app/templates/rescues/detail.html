@@ -42,6 +42,54 @@
     </table>
   </div>
 </div>
+<hr>
+<div class="row">
+  <div class="col s6">
+    <h3>{{ rescue.name }}'s Prospective Adopters</h3>
+    {% if rescue.adopters.count %}
+      {% for adopter in rescue.adopters.all %}
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title">
+              <span>{{ adopter.name }}: </span> {{ adopter.description }}
+            </span>
+          </div>
+          <div class="card-action">
+              <form action="{% url 'disassoc_adopter' rescue.id adopter.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn">Remove</button>
+              </form>
+            </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <h5>No prospective adopters at this time :(</h5>
+    {% endif %}
+  </div>
+  <!-- Available adopters will come after this line -->
+  <div class="col s6">
+      <h3>Available adopters</h3>
+      {% if adopters.count %}
+        {% for adopter in adopters.all %}
+          <div class="card">
+            <div class="card-content">
+              <span class="card-title">
+                  <span>{{ adopter.name }}: </span> {{ adopter.description }}
+              </span>
+            </div>
+            <div class="card-action">
+              <form action="{% url 'assoc_adopter' rescue.id adopter.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn">Add</button>
+              </form>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <h5>{{rescue.name}} Already Has All Prospective Adopters Available</h5>
+      {% endif %}
+    </div>
+</div>
 
 <script>
   let giftEl = document.getElementById('id_date')

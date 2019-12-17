@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Adopter List</h1>
+
+{% for adopter in adopter_list %}
+  <a href="{% url 'adopters_detail' adopter.id %}">
+    <div class="card">
+        <div class="card-content">
+            <span class="card-title">{{ adopter.name }}</span>
+            <p>Description: {{ adopter.description }}</p>
+        </div>
+    </div>
+  </a>
+{% endfor %}
+
+{% endblock %}
