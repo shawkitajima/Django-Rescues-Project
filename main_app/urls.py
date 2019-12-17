@@ -17,4 +17,5 @@ urlpatterns = [
     path('adopters/create/', views.AdopterCreate.as_view(), name = 'adopters_create'),
     path('adopters/<int:pk>/update/', views.AdopterUpdate.as_view(), name = 'adopters_update'),
     path('adopters/<int:pk>/delete/', views.AdopterDelete.as_view(), name = 'adopters_delete'),
+    path('adopters/<int:rescue_id>/add_photo/', views.add_photo, name = 'add_photo'),
     ]

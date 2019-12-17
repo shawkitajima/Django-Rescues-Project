@@ -2,8 +2,11 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
-from .models import Rescue, Adopter
+from .models import Rescue, Adopter, Photo
 from .forms import GiftForm
+import uuid
+import boto3
+
 # Create your views here.
 
 
@@ -69,3 +72,20 @@ class AdopterDelete(DeleteView):
 class AdopterCreate(CreateView):
     model = Adopter
     fields = '__all__'
+
+
+def add_photo(request, rescue_id):
+    S3_BASE_URL = 'https://s3-us-west-1.amazonaws.com/'
+    BUCKET = 'catcollectorshawkitajima'
+    rescue_photo = request.FILES.get('photo-file', None)
+    if rescue_photo:
+        s3 = boto3.client('s3')
+        key = uuid.uuid4().hex[:7] + rescue_photo.name[rescue_photo.name.rfind('.'):]
+        try:
+            s3.upload_fileobj(rescue_photo, BUCKET, key)
+            url = f"{S3_BASE_URL}{BUCKET}/{key}"
+            photo = Photo(url=url, rescue_id = rescue_id)
+            photo.save()
+        except:
+            print ('lol you done messed up')
+    return redirect('detail', rescue_id=rescue_id)
